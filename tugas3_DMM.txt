@@ -1,0 +1,123 @@
+create database db_penjualan_buku;
+use db_penjualan_buku;
+
+-- tabel user
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role ENUM('Customer', 'Admin') NOT NULL,
+    last_access TIMESTAMP
+);
+
+-- tabel authors
+create table author (
+id INT AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+photo VARCHAR(255) NOT NULL,
+bio TEXT NOT NULL
+);
+
+-- tabel genres
+create table genres(
+id INT(11) AUTO_INCREMENT PRIMARY KEY,
+name VARCHAR(255) NOT NULL,
+photo VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE books (
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(255),
+    description TEXT,
+    price DECIMAL(10, 2),
+    stock INT(11),
+    cover_photo VARCHAR(255),
+    genre_id INT(11),
+    author_id INT(11),
+    FOREIGN KEY (genre_id) REFERENCES genres(id),
+    FOREIGN KEY (author_id) REFERENCES author(id)
+);
+
+CREATE TABLE transactions (
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    order_number VARCHAR(255),
+    customer_id INT(11),
+    book_id INT(11),
+    total_amount DECIMAL(10, 2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (customer_id) REFERENCES users(id),
+    FOREIGN KEY (book_id) REFERENCES books(id)
+);
+
+INSERT INTO users (name, email, password, role) VALUES
+('Fakhirul', 'fakhirul@example.com', 'admin123', 'Admin'),
+('Alice', 'alice@example.com', 'alice324', 'Customer'),
+('Bob', 'bob@example.com', 'bob910', 'Customer');
+
+INSERT INTO genres (name, photo) VALUES
+('Fiksi', 'fiksi.jpg'),
+('Teknologi', 'teknologi.jpg'),
+('Biografi', 'biografi.jpg');
+
+INSERT INTO author (name, photo, bio) VALUES
+('Andrea Hirata', 'andrea.jpg', 'Penulis novel terkenal dari Indonesia.'),
+('Dewi Lestari', 'dee.jpg', 'Penulis dan musisi yang terkenal dengan karya-karya spiritual.'),
+('Raditya Dika', 'radit.jpg', 'Penulis dan komedian dengan gaya humor khas.');
+
+INSERT INTO books (title, description, price, stock, cover_photo, genre_id, author_id) VALUES
+('Laskar Pelangi', 'Kisah inspiratif anak-anak dari Belitung', 75000.00, 10, 'laskar.jpg', 1, 1),
+('Supernova', 'Novel dengan sentuhan fiksi ilmiah dan spiritual', 95000.00, 7, 'supernova.jpg', 2, 2),
+('Manusia Setengah Salmon', 'Kumpulan cerita lucu dan menyentuh', 65000.00, 5, 'salmon.jpg', 1, 3);
+
+INSERT INTO transactions (order_number, customer_id, book_id, total_amount) VALUES
+('ORD001', 2, 1, 75000.00),
+('ORD002', 3, 3, 65000.00),
+('ORD003', 2, 2, 95000.00);
+
+
+-- meambahkan 5 data baru ke masing masing tabel
+INSERT INTO genres (name, photo) VALUES
+('Sains', 'sains.jpg'),
+('Romansa', 'romansa.jpg'),
+('Sejarah', 'sejarah.jpg'),
+('Bisnis', 'bisnis.jpg'),
+('Petualangan', 'petualangan.jpg');
+
+INSERT INTO author (name, photo, bio) VALUES
+('Tere Liye', 'tere.jpg', 'Penulis produktif dengan banyak novel best-seller.'),
+('Habiburrahman El Shirazy', 'kangabik.jpg', 'Dikenal sebagai penulis Ayat-Ayat Cinta.'),
+('Agustinus Wibowo', 'agustinus.jpg', 'Penulis perjalanan dengan sudut pandang mendalam.'),
+('Mark Manson', 'mark.jpg', 'Penulis buku pengembangan diri yang populer.'),
+('Yuval Noah Harari', 'yuval.jpg', 'Sejarawan dan penulis buku sains populer.');
+
+INSERT INTO books (title, description, price, stock, cover_photo, genre_id, author_id) VALUES
+('Negeri Para Bedebah', 'Novel thriller ekonomi karya Tere Liye.', 89000.00, 12, 'bedebah.jpg', 4, 4),
+('Ayat-Ayat Cinta', 'Novel religi romantis terkenal.', 79000.00, 8, 'ayat.jpg', 2, 5),
+('Garis Batas', 'Catatan perjalanan dari negeri konflik.', 68000.00, 6, 'garisbatas.jpg', 5, 6),
+('The Subtle Art of Not Giving a F*ck', 'Buku self-help dengan pendekatan anti-mainstream.', 99000.00, 15, 'subtleart.jpg', 4, 7),
+('Sapiens', 'Sejarah singkat umat manusia.', 120000.00, 10, 'sapiens.jpg', 3, 8);
+
+INSERT INTO users (name, email, password, role) VALUES
+('Charlie', 'charlie@example.com', 'charlie123', 'Customer'),
+('Diana', 'diana@example.com', 'diana456', 'Customer'),
+('Evan', 'evan@example.com', 'evan789', 'Customer'),
+('Fiona', 'fiona@example.com', 'fiona321', 'Customer'),
+('George', 'george@example.com', 'george654', 'Customer');
+
+INSERT INTO transactions (order_number, customer_id, book_id, total_amount) VALUES
+('ORD004', 3, 4, 89000.00),
+('ORD005', 2, 5, 79000.00),
+('ORD006', 2, 6, 68000.00),
+('ORD007', 3, 7, 99000.00),
+('ORD008', 2, 8, 120000.00);
+
+-- update
+UPDATE books
+SET price = 85000.00, stock = 20
+WHERE title = 'Laskar Pelangi';
+
+-- hapus
+DELETE FROM users
+WHERE email = 'george@example.com';
