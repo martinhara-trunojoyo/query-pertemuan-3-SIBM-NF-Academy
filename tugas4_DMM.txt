@@ -1,0 +1,37 @@
+-- subquery
+SELECT nama_usaha 
+FROM umkm 
+WHERE id_umkm IN (
+    SELECT id_umkm 
+    FROM produk_umkm 
+    WHERE harga > (SELECT AVG(harga) FROM produk_umkm)
+);
+
+-- distinct 
+SELECT DISTINCT k.nama_kabupaten_kota
+FROM umkm u
+JOIN kabupaten_kota k ON u.id_kabupaten_kota = k.id_kabupaten_kota;
+
+-- case 
+SELECT nama_produk,
+       CASE 
+           WHEN harga > 1000000 THEN 'Mahal'
+           WHEN harga BETWEEN 500000 AND 1000000 THEN 'Sedang'
+           ELSE 'Murah'
+       END AS kategori_harga
+FROM produk_umkm;
+
+-- group by
+SELECT s.nama_skala, COUNT(u.id_umkm) AS jumlah_umkm
+FROM umkm u
+JOIN skala_umkm s ON u.id_skala = s.id_skala
+GROUP BY s.nama_skala;
+
+
+-- having
+
+SELECT s.nama_skala, COUNT(u.id_umkm) AS jumlah_umkm
+FROM umkm u
+JOIN skala_umkm s ON u.id_skala = s.id_skala
+GROUP BY s.nama_skala
+HAVING COUNT(u.id_umkm) > 5;
